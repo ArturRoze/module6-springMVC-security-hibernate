@@ -5,7 +5,7 @@
 </head>
 <body>
 
-    Hello from JSP!
+    Hello from index JSP!
 
 </body>
 </html>
