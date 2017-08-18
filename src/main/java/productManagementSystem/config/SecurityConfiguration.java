@@ -33,7 +33,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    // Basic idea is next - create controller where:
     // 1. USER can check all users in the system.
     // 2. ADMIN can create, update or remove users.
     http.authorizeRequests().antMatchers("/user/list").hasAnyRole("USER", "ADMIN")
