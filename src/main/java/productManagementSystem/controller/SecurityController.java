@@ -7,18 +7,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/user")
 public class SecurityController {
-    // if user = user -> "userPage";
-    // else -> "adminCrudPage"
+
     @RequestMapping(method = RequestMethod.POST)
     public String listAllUsers() {
         System.out.println("List all products");
-        return "userPage";
+        return "mainPage";
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/admin")
     public String adminCrud() {
         System.out.println("List admin Crud operation");
-        return "adminCrudPage";
+        return "mainPage";
     }
 
 }

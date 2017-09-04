@@ -60,18 +60,23 @@ public class ProductController {
             return "updated: " + productFromDatabase;
         }
 
-        return "object not found";
+        return "object to update not found";
 
     }
 
     @ResponseBody
     @RequestMapping("/delete/{productId}")
-    public String deleteProduct(String productId) {
+    public String deleteProduct(@PathVariable String productId) {
         Product productFromDatabase = productService.getAllProducts()
                 .get(Integer.parseInt(productId));
 
-        productService.deleteProduct(productFromDatabase);
+        if (productFromDatabase != null) {
 
-        return "deleted: " + productFromDatabase;
+            productService.deleteProduct(productFromDatabase);
+
+            return "deleted: " + productFromDatabase;
+        }
+
+        return "object to delete not found";
     }
 }
