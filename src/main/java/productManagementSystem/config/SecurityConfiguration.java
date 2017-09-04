@@ -20,8 +20,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Autowired
   protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    auth.inMemoryAuthentication().withUser("Vasya").password("vasya").roles("USER");
-    auth.inMemoryAuthentication().withUser("Artur").password("artur").roles("ADMIN");
+    auth.inMemoryAuthentication().withUser("user").password("user").roles("USER");
+    auth.inMemoryAuthentication().withUser("artur").password("artur").roles("ADMIN");
   }
 
   // We will use BC password encoder and http basic configuration.
@@ -35,8 +35,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     // 1. USER can check all users in the system.
     // 2. ADMIN can create, update or remove users.
-    http.authorizeRequests().antMatchers("/user/list").hasAnyRole("USER", "ADMIN")
-                            .antMatchers("/user/**").hasRole("ADMIN")
-                            .and().formLogin();
+    http.authorizeRequests().antMatchers("/user", "/products/action/read").hasAnyRole("USER", "ADMIN")
+                            .antMatchers("/user/**", "/products/action/**")
+                            .hasRole("ADMIN").and().formLogin().successForwardUrl("/user/admin");
   }
 }

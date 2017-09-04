@@ -17,13 +17,12 @@ public class Product {
     @Column
     private String description;
     @Column
-    @Enumerated(EnumType.STRING)
-    private Vendor vendor;
+    private String vendor;
 
     public Product() {
     }
 
-    public Product(String name, BigDecimal cost, String description, Vendor vendor) {
+    public Product(String name, BigDecimal cost, String description, String vendor) {
         this.name = name;
         this.cost = cost;
         this.description = description;
@@ -62,11 +61,11 @@ public class Product {
         this.description = description;
     }
 
-    public Vendor getVendor() {
+    public String getVendor() {
         return vendor;
     }
 
-    public void setVendor(Vendor vendor) {
+    public void setVendor(String vendor) {
         this.vendor = vendor;
     }
 

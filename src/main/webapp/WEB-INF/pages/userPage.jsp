@@ -1,11 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>User Page</title>
 </head>
 <body>
-
-        <a href="${contextPath}/user">Login</a>
-
+        <a href="${contextPath}/products/action/read">All Products</a>
 </body>
 </html>

@@ -1,17 +1,19 @@
 package productManagementSystem.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 import productManagementSystem.model.Product;
-import productManagementSystem.model.Vendor;
 import productManagementSystem.service.ProductService;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-@RestController
-@RequestMapping("/products")
+@Controller
+@RequestMapping("/products/action")
 public class ProductController {
 
     private ProductService productService;
@@ -21,26 +23,55 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @RequestMapping("/action/{someAction}")
-    public String pathOne(@PathVariable("someAction") String someAction) {
+    @ResponseBody // because created:+product.jsp does not exist
+    @RequestMapping("/create")
+    public String createProduct() {
+        Product product = new Product("TV", new BigDecimal("777"), "device", "LG");
+        productService.saveProductToDb(product);
+        return "created: " + product;
+    }
 
-        Product product = new Product("TV", new BigDecimal("777"), "device", Vendor.LG);
+    @RequestMapping("/read")
+    public String readProduct(Model model) {
+        List<Product> allProducts = productService.getAllProducts();
+        model.addAttribute("listProducts", allProducts);
+        return "allProducts";
+    }
 
-        if (someAction.equals("create")) {
-            productService.saveProductToDb(product);
+    @ResponseBody
+    @RequestMapping("/update/{productId}")
+    public String updateProduct(@PathVariable String productId) {
+        Product productToUpdate = new Product("aa", BigDecimal.ONE,
+                "ss", "dd");
 
-        } else if (someAction.equals("read")) {
-            productService.getAllProducts();
+        if(!productService.getAllProducts().isEmpty()) {
+            Product productFromDatabase = productService.getAllProducts()
+                    .get(Integer.parseInt(productId));
 
-        } else if (someAction.equals("update")) {
-            productService.updateProduct(product);
+            productFromDatabase.setCost(productToUpdate.getCost());
+            productFromDatabase.setName(productToUpdate.getName());
+            productFromDatabase.setVendor(productToUpdate.getVendor());
+            productFromDatabase.setDescription(productToUpdate.getDescription());
 
-        } else if (someAction.equals("delete")) {
-            productService.deleteProduct(product);
+            productFromDatabase.setCost(productToUpdate.getCost());
 
-        } else {
-            return "unknown action";
+            productService.updateProduct(productFromDatabase);
+
+            return "updated: " + productFromDatabase;
         }
-        return "test";
+
+        return "object not found";
+
+    }
+
+    @ResponseBody
+    @RequestMapping("/delete/{productId}")
+    public String deleteProduct(String productId) {
+        Product productFromDatabase = productService.getAllProducts()
+                .get(Integer.parseInt(productId));
+
+        productService.deleteProduct(productFromDatabase);
+
+        return "deleted: " + productFromDatabase;
     }
 }

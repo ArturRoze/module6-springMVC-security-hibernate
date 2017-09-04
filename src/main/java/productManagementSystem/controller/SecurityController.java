@@ -1,21 +1,24 @@
 package productManagementSystem.controller;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @RequestMapping("/user")
 public class SecurityController {
-
-    @RequestMapping(method = RequestMethod.GET, value = "/list")
-    public void listAllUsers() {
-        System.out.println("List all users");
+    // if user = user -> "userPage";
+    // else -> "adminCrudPage"
+    @RequestMapping(method = RequestMethod.POST)
+    public String listAllUsers() {
+        System.out.println("List all products");
+        return "userPage";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/admin")
-    public void adminCrud() {
+    @RequestMapping(method = RequestMethod.POST, value = "/admin")
+    public String adminCrud() {
         System.out.println("List admin Crud operation");
+        return "adminCrudPage";
     }
 
 }

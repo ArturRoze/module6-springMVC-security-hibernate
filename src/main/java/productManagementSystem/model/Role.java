@@ -1,9 +1,7 @@
 package productManagementSystem.model;
 
-public class Role {
+public enum Role {
 
-    private String admin;
-
-    private String user;
+    ADMIN, USER;
 
 }
