@@ -7,6 +7,7 @@
 <body>
 <sec:authorize access="hasRole('ADMIN')">
     <a href="${contextPath}/products/create">Create Product</a>
+    <br>
 </sec:authorize>
 
 <sec:authorize access="hasAnyRole('USER', 'ADMIN')">
