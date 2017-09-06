@@ -1,19 +1,20 @@
 package productManagementSystem.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import productManagementSystem.model.Product;
 import productManagementSystem.service.ProductService;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
-@RequestMapping("/products/action")
+@RequestMapping("/products")
 public class ProductController {
 
     private ProductService productService;
@@ -23,60 +24,61 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @ResponseBody // because created:+product.jsp does not exist
-    @RequestMapping("/create")
-    public String createProduct() {
-        Product product = new Product("TV", new BigDecimal("777"), "device", "LG");
+    @RequestMapping(method = RequestMethod.POST, value = "/create/", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String createProduct(@RequestParam("name") String name,
+                                @RequestParam("vendor") String vendor,
+                                @RequestParam("dollars") Integer dollars,
+                                @RequestParam("cents") Integer cents,
+                                @RequestParam("description") String description
+    ) throws IOException {
+        Product product = new Product();
+        product.setName(name);
+        product.setVendor(vendor);
+        product.setDescription(description);
+        BigDecimal price = BigDecimal.valueOf(dollars + (double) cents / 100);
+        product.setCost(price);
         productService.saveProductToDb(product);
-        return "created: " + product;
+        return "redirect:/products/allProducts";
     }
 
-    @RequestMapping("/read")
+    @RequestMapping({"/read", "/allProducts"})
     public String readProduct(Model model) {
         List<Product> allProducts = productService.getAllProducts();
         model.addAttribute("listProducts", allProducts);
         return "allProducts";
     }
 
-    @ResponseBody
-    @RequestMapping("/update/{productId}")
-    public String updateProduct(@PathVariable String productId) {
-        Product productToUpdate = new Product("aa", BigDecimal.ONE,
-                "ss", "dd");
-
-        if(!productService.getAllProducts().isEmpty()) {
-            Product productFromDatabase = productService.getAllProducts()
-                    .get(Integer.parseInt(productId));
-
-            productFromDatabase.setCost(productToUpdate.getCost());
-            productFromDatabase.setName(productToUpdate.getName());
-            productFromDatabase.setVendor(productToUpdate.getVendor());
-            productFromDatabase.setDescription(productToUpdate.getDescription());
-
-            productFromDatabase.setCost(productToUpdate.getCost());
-
-            productService.updateProduct(productFromDatabase);
-
-            return "updated: " + productFromDatabase;
-        }
-
-        return "object to update not found";
-
+    @RequestMapping(method = RequestMethod.GET, value = "/product_update/{id}")
+    public String updateProduct(@PathVariable("id") String id, Model model) {
+        Product product = productService.getById(Integer.parseInt(id));
+        model.addAttribute("product", product);
+        return "product_update";
     }
 
-    @ResponseBody
-    @RequestMapping("/delete/{productId}")
-    public String deleteProduct(@PathVariable String productId) {
-        Product productFromDatabase = productService.getAllProducts()
-                .get(Integer.parseInt(productId));
-
-        if (productFromDatabase != null) {
-
-            productService.deleteProduct(productFromDatabase);
-
-            return "deleted: " + productFromDatabase;
-        }
-
-        return "object to delete not found";
+    @RequestMapping(method = RequestMethod.POST, value = "/update", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String updateProduct(@RequestParam("id") int id,
+                                @RequestParam("name") String name,
+                                @RequestParam("vendor") String vendor,
+                                @RequestParam("dollars") Integer dollars,
+                                @RequestParam("cents") Integer cents,
+                                @RequestParam("description") String description
+    ) throws IOException {
+        Product product = new Product();
+        product.setId(id);
+        product.setName(name);
+        product.setVendor(vendor);
+        product.setDescription(description);
+        BigDecimal price = BigDecimal.valueOf(dollars + (double) cents / 100);
+        product.setCost(price);
+        productService.updateProduct(product);
+        return "redirect:/products/allProducts";
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
+    public String deleteProduct(@PathVariable("id") String id) {
+        Product product = productService.getById(Integer.parseInt(id));
+        productService.deleteProduct(product);
+        return "redirect:/products/allProducts";
+    }
+
 }

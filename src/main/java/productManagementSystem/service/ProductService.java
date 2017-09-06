@@ -18,6 +18,11 @@ public class ProductService {
         this.productDao = productDao;
     }
 
+    @Transactional(readOnly = true)
+    public Product getById(int id) {
+        return productDao.getById(id);
+    }
+
     @Transactional
     public void saveProductToDb(Product product){
         productDao.create(product);

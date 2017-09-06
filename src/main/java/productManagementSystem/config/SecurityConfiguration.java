@@ -35,8 +35,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     // 1. USER can check all users in the system.
     // 2. ADMIN can create, update or remove users.
-    http.authorizeRequests().antMatchers("/user", "/products/action/read").hasAnyRole("USER", "ADMIN")
-                            .antMatchers("/user/**", "/products/action/**")
-                            .hasRole("ADMIN").and().formLogin().successForwardUrl("/user/admin");
+    http.authorizeRequests().antMatchers("/user", "/products/read").hasAnyRole("USER", "ADMIN")
+                            .antMatchers("/user/**", "/products/**").hasRole("ADMIN")
+            .and()
+            .formLogin()
+            .successForwardUrl("/user/admin")
+            .and()
+            .csrf()
+            .disable();
+
   }
 }

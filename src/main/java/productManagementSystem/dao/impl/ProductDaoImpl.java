@@ -25,6 +25,12 @@ public class ProductDaoImpl implements Dao<Product> {
     }
 
     @Override
+    public Product getById(int id) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.get(Product.class, id);
+    }
+
+    @Override
     public void create(Product product) {
         Session session = sessionFactory.getCurrentSession();
         session.save(product);

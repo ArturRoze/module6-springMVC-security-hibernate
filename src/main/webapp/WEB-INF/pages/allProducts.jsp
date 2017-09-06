@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <html>
 <head>
@@ -22,6 +23,7 @@
                     <th width="100">Product Cost</th>
                     <th width="100">Description</th>
                     <th width="100">Vendor</th>
+
                 </tr>
                 <c:forEach items="${listProducts}" var="product">
                     <tr>
@@ -30,6 +32,15 @@
                         <td>${product.cost}</td>
                         <td>${product.description}</td>
                         <td>${product.vendor}</td>
+                        <sec:authorize access="hasRole('ADMIN')">
+                            <td><form action="/products/product_update/${product.id}">
+                                <input type="submit" value="Update">
+                            </form></td>
+
+                            <td><form action="/products/delete/${product.id}">
+                                <input type="submit" value="Delete">
+                            </form></td>
+                        </sec:authorize>
 
                     </tr>
                 </c:forEach>

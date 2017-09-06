@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface Dao<T> {
 
+    T getById (int id);
+
     void create(T value);
 
     List<T> read();

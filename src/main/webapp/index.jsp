@@ -5,7 +5,7 @@
 </head>
 <body>
 
-        <a href="${contextPath}/user">Login</a>
+        <a href="${contextPath}/login">Login</a>
 
 </body>
 </html>
