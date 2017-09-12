@@ -18,11 +18,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @ComponentScan("productManagementSystem.controller")
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-  @Autowired
-  protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    auth.inMemoryAuthentication().withUser("user").password("user").roles("USER");
-    auth.inMemoryAuthentication().withUser("artur").password("artur").roles("ADMIN");
-  }
+//  @Autowired
+//  protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//    auth.inMemoryAuthentication().withUser("user").password("user").roles("USER");
+//    auth.inMemoryAuthentication().withUser("artur").password("artur").roles("ADMIN");
+//  }
 
   // We will use BC password encoder and http basic configuration.
   // Configure this all by configure method.
@@ -34,15 +34,38 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     // 1. USER can check all users in the system.
-    // 2. ADMIN can create, update or remove users.
-    http.authorizeRequests().antMatchers("/user", "/products/read").hasAnyRole("USER", "ADMIN")
-                            .antMatchers("/user/**", "/products/**").hasRole("ADMIN")
+    // 2. ADMIN can create, update or delete users.
+//    http.authorizeRequests().antMatchers("/user", "/products/read").hasAnyRole("USER", "ADMIN")
+//                            .antMatchers().hasRole("ADMIN")
+//            .and()
+//            .formLogin()
+//            .successForwardUrl("/user/admin")
+//            .and()
+//            .csrf()
+//            .disable();
+
+    http.authorizeRequests()
+            .antMatchers("/", "/login", "/registration", "/register").permitAll()
+            .antMatchers("/user", "/products/read").hasAnyRole("USER", "ADMIN")
+            .antMatchers("/user/**", "/products/**").hasRole("ADMIN")
+            .antMatchers("/**").authenticated()
+            .anyRequest().denyAll()
             .and()
             .formLogin()
-            .successForwardUrl("/user/admin")
+            .defaultSuccessUrl("/products/read")
+            .loginPage("/login")
+            .failureUrl("/login?error")
+            .permitAll()
             .and()
-            .csrf()
-            .disable();
-
+            // разрешаем делать логаут всем
+            .logout().permitAll()
+            // указываем URL логаута
+            .logoutUrl("/logout")
+            // указываем URL при удачном логауте
+            .logoutSuccessUrl("/login?logout")
+            // делаем не валидной текущую сессию
+            .invalidateHttpSession(true)
+            .and()
+            .csrf().disable();
   }
 }

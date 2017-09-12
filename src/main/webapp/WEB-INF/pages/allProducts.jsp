@@ -23,6 +23,10 @@
                     <th width="100">Product Cost</th>
                     <th width="100">Description</th>
                     <th width="100">Vendor</th>
+                    <sec:authorize access="hasRole('ADMIN')">
+                        <th width="100">Update</th>
+                        <th width="100">Delete</th>
+                    </sec:authorize>
 
                 </tr>
                 <c:forEach items="${listProducts}" var="product">
@@ -46,5 +50,11 @@
                 </c:forEach>
             </table>
         </c:if>
+    <div align="center">
+        <form action="/login?logout" method="post">
+            <input type="submit" value="logout">
+        </form>
+    </div>
+
 </body>
 </html>
