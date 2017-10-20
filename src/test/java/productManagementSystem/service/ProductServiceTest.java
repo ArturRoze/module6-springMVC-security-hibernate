@@ -12,6 +12,8 @@ import productManagementSystem.dao.impl.ProductDaoImpl;
 import productManagementSystem.model.Product;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -60,14 +62,55 @@ public class ProductServiceTest {
 
     @Test
     public void getAllProducts() throws Exception {
+        // arrange
+        Product product = configureProductDao();
+        when(productService.getAllProducts()).thenReturn(Arrays.asList(product, product));
+
+        // action
+        productService.getAllProducts();
+
+        //assert
+        verify(productDao, times(1)).read();
     }
 
     @Test
     public void updateProduct() throws Exception {
+        // arrange
+        Product product = configureProductDao();
+        doAnswer(invocation -> null).when(productDao).update(product);
+
+        // action
+        productService.updateProduct(product);
+
+        //assert
+        verify(productDao, times(1)).update(product);
     }
 
     @Test
     public void deleteProduct() throws Exception {
+        // arrange
+        Product product = configureProductDao();
+        when(productService.getAllProducts()).thenReturn(Arrays.asList(product, product));
+        doAnswer(i -> null).when(productDao).delete(product);
+
+        // action
+        productService.deleteProduct(product);
+
+        //assert
+        verify(productDao, times(1)).delete(product);
+    }
+    @Test
+    public void deleteEmptyProductsListTest() throws Exception {
+
+        //arrange
+        Product product = configureProductDao();
+        when(productService.getAllProducts()).thenReturn(Collections.emptyList());
+
+        //action
+        productService.deleteProduct(product);
+
+        //assert
+        verify(productDao, times(1)).delete(product);
     }
 
     private Product configureProductDao() {
