@@ -9,10 +9,12 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import productManagementSystem.dao.Dao;
 import productManagementSystem.dao.impl.ProductDaoImpl;
-import productManagementSystem.dao.impl.UserDaoImpl;
 import productManagementSystem.model.Product;
 
-import static org.junit.Assert.*;
+import java.math.BigDecimal;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -27,30 +29,13 @@ public class ProductServiceTest {
     private ProductService productService;
 
     @Mock
-    private Dao dao;
-
-    @Mock
     private ProductDaoImpl productDao;
-
-    @Mock
-    private UserDaoImpl userDao;
-
-    private Product configureProductDao() {
-
-        Product product = new Product();
-        product.setId(1);
-        product.setName("TV");
-        product.setDescription("yellow");
-        product.setVendor("Samsung");
-
-        return product;
-    }
 
     @Test
     public void getById() throws Exception {
         // arrange
         Product expectedProduct = configureProductDao();
-        when(productDao.getById(expectedProduct.getId())).thenReturn(expectedProduct);
+        when(productService.getById(expectedProduct.getId())).thenReturn(expectedProduct);
 
         // action
         Product actualProduct = productService.getById(1);
@@ -85,4 +70,17 @@ public class ProductServiceTest {
     public void deleteProduct() throws Exception {
     }
 
+    private Product configureProductDao() {
+
+        Product product = new Product();
+
+        BigDecimal cost = new BigDecimal("1115.37");
+        product.setId(1);
+        product.setName("TV");
+        product.setCost(cost);
+        product.setDescription("yellow");
+        product.setVendor("Samsung");
+
+        return product;
+    }
 }
