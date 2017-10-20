@@ -51,6 +51,6 @@ public class UserDetailedServiceImplTest {
 
         when(userService.getById(anyString())).thenReturn(null);
 
-        userDetailsService.loadUserByUsername(null);
+        userDetailsService.loadUserByUsername(anyString());
     }
 }
