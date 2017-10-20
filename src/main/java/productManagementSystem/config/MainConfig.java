@@ -16,7 +16,7 @@ import java.beans.PropertyVetoException;
 import java.util.Properties;
 
 @Configuration
-@ComponentScan("productManagementSystem")
+@ComponentScan({"productManagementSystem.dao", "productManagementSystem.service"})
 @PropertySource(value = {"classpath:application.properties"})
 @EnableTransactionManagement
 public class MainConfig {

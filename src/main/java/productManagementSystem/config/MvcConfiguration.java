@@ -14,7 +14,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("productManagementSystem")
+@ComponentScan("productManagementSystem.controller")
 public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
   @Override
