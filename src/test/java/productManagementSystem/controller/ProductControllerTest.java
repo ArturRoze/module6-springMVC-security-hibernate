@@ -96,11 +96,11 @@ public class ProductControllerTest {
     }
 
     @Test
-    @Ignore
     public void updateProduct() throws Exception {
         when(productService.getById(id)).thenReturn(product);
 
         mvc.perform(post("/products/update").with(user("user").roles("ADMIN"))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .param("id", "1")
                 .param("name", "name")
                 .param("vendor", "vendor")
